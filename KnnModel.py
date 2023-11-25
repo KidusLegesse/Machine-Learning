@@ -1,38 +1,45 @@
-import numpy as np
-import ML
 from sklearn.metrics import classification_report
+import numpy as np
+import ML as ML
 
 
-def euclidean_distance(x1, x2):
-    return np.sqrt(np.sum((x1 - x2)**2))
+def euclidean_distance(point1, point2):
+    return np.sqrt(np.sum((point1 - point2)**2))
 
-
-class KNN:
+class CustomKNNModel:
     def __init__(self, neighbors=3):
         self.neighbors = neighbors
+        self.attributes = None
+        self.targets = None
+    
+    def fit(self, attributes, targets):
+        self.attributes = attributes
+        self.targets = targets
 
-    def fit(self, X, y):
-        self.X_train = X
-        self.y_train = y
+    # Returns an array of predictions by calculating the distance of all training points
+    def predict(self, test_data, lst=[]):
+        
+        for data in test_data:
+            distances = [euclidean_distance(data, attribute) for attribute in self.attributes]
+            neighbors_index = np.argsort(distances)[:self.neighbors]
+            kneighbors= [self.targets[point] for point in neighbors_index]
 
-    def predict(self, X):
-        y_pred = [self.predictHelper(x) for x in X]
-        return np.array(y_pred)
+            # Predict the class based on majority vote
+            target_prediction = max(set(kneighbors), key=kneighbors.count)
+            lst.append(target_prediction)
 
-    def predictHelper(self, x):
-        distances = [euclidean_distance(x, x_train)
-                     for x_train in self.X_train]
-        k_indices = np.argsort(distances)[:self.neighbors]
-        k_nearest_labels = [self.y_train[i] for i in k_indices]
-        most_common = np.bincount(k_nearest_labels).argmax()
-        return most_common
+        return np.array(lst)
 
-    def accuracy(self, y_true, y_pred):
-        return np.mean(y_true == y_pred)
+# Training the model using the training set
+knn_model = CustomKNNModel(neighbors=3)
+knn_model.fit(ML.attributes_train, ML.targets_train)
 
+# Chekcing the accuracy of the model on the validation set
+valid_target_pred = knn_model.predict(ML.attributes_valid)
+accuracy = np.mean(valid_target_pred == ML.targets_valid)
+accuracy = (round(accuracy*100)) # round and convert accuracy to a percentage for readability
+print("Validation Accuracy:", str(accuracy)+"%") 
 
-knn_model = KNN(5)
-knn_model.fit(ML.X_train, ML.y_train)
-y_pred = knn_model.predict(ML.X_test)
-print(knn_model.accuracy(ML.y_test, y_pred))
-print(classification_report(ML.y_test, y_pred, zero_division=1))
+# Classification report on using the test set
+target_pred = knn_model.predict(ML.attributes_test, [])
+print(classification_report(ML.targets_test, target_pred))
