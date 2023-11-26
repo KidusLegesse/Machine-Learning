@@ -11,7 +11,7 @@ attributes = ["age", "sex", "chestpain", "trestbps", "chol", "fbs",
 dataSet = pd.read_csv("processed.cleveland.data", names=attributes)
 
 #Checking to see if the the columns are properly named and placed
-# print(dataSet.head())
+print(dataSet.head())
 
 #Replacing missing values with NaN since they are represented by ?
 dataSet.replace('?', np.nan, inplace=True)

@@ -12,12 +12,10 @@ def train_NeuralNetwork(att_train, tar_train):
     -I chose the loss to be binary cross entropy since there are 2 targets [0,1]
     -Relu function is used in the hidden layers because of its effiecnt
     -Sigmoid function for the output layers because this is a binay classification
-    - Nodes (64, 32, 32) gave the best accuracy
+    - Nodes (64, 32) gave the best accuracy
     """
     neuralNet = tf.keras.Sequential()
     neuralNet.add(tf.keras.layers.Dense(64, activation='relu', input_shape=(13,)))
-    neuralNet.add(tf.keras.layers.Dropout(0.3))
-    neuralNet.add(tf.keras.layers.Dense(32, activation='relu',))
     neuralNet.add(tf.keras.layers.Dropout(0.3))
     neuralNet.add(tf.keras.layers.Dense(32, activation='relu'))
     neuralNet.add(tf.keras.layers.Dropout(0.3))
@@ -26,7 +24,7 @@ def train_NeuralNetwork(att_train, tar_train):
     neuralNet.compile(optimizer="adam", loss='binary_crossentropy',
                   metrics=['accuracy'])
     model_history = neuralNet.fit(
-        att_train, tar_train, epochs=64, batch_size=32, validation_data=(ML.attributes_valid, ML.targets_valid_one_hot), verbose=0
+        att_train, tar_train, epochs=32, batch_size=32, validation_data=(ML.attributes_valid, ML.targets_valid_one_hot), verbose=1
     )
     return neuralNet, model_history
 
