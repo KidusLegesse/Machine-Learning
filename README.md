@@ -82,7 +82,7 @@ The target :dart: values are [0,1,2,3,4]. 0(min-value) corresponds to no presenc
 
 ## 🧰🛠Tools Used:
 
-**Tensorflow, Matplotlib, Sklearn, Mumpy, Pandas, Imblearn**
+**Python🐍, Tensorflow, Matplotlib, Scikit-learn, Numpy, Pandas🐼, Imblearn**
 
 ---
 
